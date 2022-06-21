@@ -1,12 +1,10 @@
 /*
  * alphavantage ticker device
  */
-import groovy.json.JsonSlurper
 
 metadata {
-	definition(name: "my.stockticker", namespace: "leosperry", author: "Leonard Sperry"
-               /*, importUrl: "https://raw.githubusercontent.com/staze/hubitat-gmcmap/master/hubitat-gmcmap.groovy"*/
-              ) {
+	definition(name: "stockticker", namespace: "alphavantage", author: "Leonard Sperry", importUrl: "https://raw.githubusercontent.com/leosperry/hubitat/main/alphavantage") 
+    {
 		capability "Sensor"
 		capability "Polling"
 		attribute "Low", "NUMBER"
@@ -43,20 +41,25 @@ def parse(String description) {
 }
 
 def poll() {
-	if (logEnable) log.debug "gmcmap polling..."
-    //def url = "http://www.gmcmap.com/historyData-plain.asp?Param_ID=${GeigerID}&timezone=${Timezone}"
-	//def url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=ENV&apikey=BUZNUKC0JHBP63HF"
+	if (logEnable) log.debug "alphabantage polling..."
+    
     def url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${Symbol}&apikey=${ApiKey}"
+    
 	try {
 		httpGet(url) { resp -> 
 			if (logEnable) log.debug resp.getData()
 			
             def respValues = resp.data["Global Quote"]
+            sendEvent(name: "Symbol", value: respValues["01. symbol"])
+            sendEvent(name: "Open", value: respValues["02. open"])
+            sendEvent(name: "High", value: respValues["03. high"])
 			sendEvent(name: "Low", value: respValues["04. low"])
-			sendEvent(name: "High", value: respValues["03. high"])
 			sendEvent(name: "Price", value: respValues["05. price"])
-			
-            //log.info respValues.CPM + " CPM, " + respValues.ACPM + " ACPM, " + respValues.uSv + " uSv"
+            sendEvent(name: "Volume", value: respValues["06. volume"])
+            sendEvent(name: "LatestTradingDay", value: respValues["07. latest trading day"])
+            sendEvent(name: "PreviousClose", value: respValues["08. previous close"])
+            sendEvent(name: "Change", value: respValues["09. change"])
+			sendEvent(name: "ChangePercent", value: respValues["10. change percent"])
 		}
 	} catch(Exception e) {
 		log.debug "error occured calling httpget ${e}"
