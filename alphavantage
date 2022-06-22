@@ -7,18 +7,16 @@ metadata {
     {
 		capability "Sensor"
 		capability "Polling"
-        attribute "Symbol", "STRING"
-        attribute "Open", "NUMBER"
+		attribute "Symbol", "STRING"
+		attribute "Open", "NUMBER"
 		attribute "High", "NUMBER"
-        attribute "Low", "NUMBER"
+		attribute "Low", "NUMBER"
 		attribute "Price", "NUMBER"
-        attribute "Volume", "NUMBER"
-        attribute "LatestTradingDay", "DATE"
-        attribute "PreviousClose", "NUMBER"
-        attribute "Change", "NUMBER"
-        attribute "ChangePercent", "NUMBER"
-        
-        attribute "", ""
+		attribute "Volume", "NUMBER"
+		attribute "LatestTradingDay", "DATE"
+		attribute "PreviousClose", "NUMBER"
+		attribute "Change", "NUMBER"
+		attribute "ChangePercent", "NUMBER"
 	}
 }
 
