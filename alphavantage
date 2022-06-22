@@ -24,6 +24,8 @@ preferences {
 	section("URIs") {
 		input name: "ApiKey", type: "text", title: "API Key", required: true
         input name: "Symbol", type: "text", title: "Symbol", required: true
+        input name: 'updateMins', type: 'enum', description: "Select the update frequency", title: "Update frequency (minutes)\n0 is disabled", defaultValue: '30', options: ['0','5','10','15','30'], required: true
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
 	}
 }
 
