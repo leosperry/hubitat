@@ -2,6 +2,7 @@
  * alphavantage ticker device
  */
 
+
 metadata {
 	definition(name: "alphavantage.stockticker", namespace: "alphavantage", author: "Leonard Sperry", importUrl: "https://raw.githubusercontent.com/leosperry/hubitat/main/alphavantage") 
     {
@@ -17,6 +18,7 @@ metadata {
 		attribute "PreviousClose", "NUMBER"
 		attribute "Change", "NUMBER"
 		attribute "ChangePercent", "NUMBER"
+        attribute "LastestPoll", "DATE"
 	}
 }
 
@@ -36,7 +38,7 @@ def logsOff() {
 
 def updated() {
 	unschedule()
-	log.info "gmcmap updated..."
+	log.info "alphavantage updated..."
 	log.warn "debug logging is: ${logEnable == true}"
 	if (logEnable) runIn(1800, logsOff)
 	if(updateMins != "0") {
@@ -50,13 +52,15 @@ def parse(String description) {
 }
 
 def poll() {
-	if (logEnable) log.debug "alphabantage polling..."
+	if (logEnable) log.debug "alphavantage polling..."
     
     def url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${Symbol}&apikey=${ApiKey}"
     
 	try {
 		httpGet(url) { resp -> 
-			if (logEnable) log.debug resp.getData()
+			//if (logEnable) log.debug 
+            
+            resp.getData()
 			
             def respValues = resp.data["Global Quote"]
             sendEvent(name: "Symbol", value: respValues["01. symbol"])
@@ -69,6 +73,8 @@ def poll() {
             sendEvent(name: "PreviousClose", value: respValues["08. previous close"])
             sendEvent(name: "Change", value: respValues["09. change"])
 			sendEvent(name: "ChangePercent", value: respValues["10. change percent"])
+            
+            sendEvent(name: "LastestPoll", value: new Date())
 		}
 	} catch(Exception e) {
 		log.debug "error occured calling httpget ${e}"
